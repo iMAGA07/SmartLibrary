@@ -81,7 +81,7 @@
     </p>
     <p>
         {{ form.modified_date.label }}<br>
-        {{ form.modified_date(class="form-control", type="password") }}<br>
+        {{ form.modified_date(class="form-control", type="time") }}<br>
         {% for error in form.modified_date.errors %}
             <p class="alert alert-danger" role="alert">
                 {{ error }}
@@ -90,6 +90,7 @@
     </p>
 
     <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+    <p>{{ form.regist(type="submit", class="btn btn-primary") }}</p>
     {{message}}
 </form>
 {% endblock %}
