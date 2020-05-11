@@ -1,26 +1,16 @@
 import requests
 from flask import Flask, render_template, request, make_response, jsonify
 from flask_login import LoginManager, login_user, current_user, login_required, logout_user
-from flask_restful import Api
-from flask_wtf import FlaskForm
-from requests import get
-from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
-from wtforms import PasswordField, BooleanField, SubmitField, StringField, IntegerField
-from wtforms.fields.html5 import EmailField
-from wtforms.validators import DataRequired
-
+from data.orders import Orders
 from data import db_session, users_api
 from data.book import Book
 from data.db_session import create_session, global_init
-from data.forms import LoginForm, RegisterForm, BookForm
-from data.genre import Genre
+from data.forms import LoginForm, RegisterForm, BookForm, AddOrderForm
 
 from data.users import User
 
-from flask import make_response
-import sys
-
+books_id = 0
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 db_session.global_init("db/library.sqlite")
@@ -70,8 +60,6 @@ def register():
                 books_read=form.books_read.data,
                 books_written=form.books_written.data,
                 email=form.email.data,
-                hashed_password=form.hashed_password.data,
-                modified_data=form.modified_data.data,
 
             )
             user.set_password(form.password.data)
@@ -119,6 +107,9 @@ def index():
 @app.route('/books/<int:id>', methods=['GET', 'POST'])
 def show_book(id):
     book = session.query(Book).filter(Book.id == id).first()
+    global books_id
+    books_id = id
+
     return render_template('book.html', title='About a book', book=book)
 
 
@@ -147,6 +138,36 @@ def add_book():
         return redirect('/')
     return render_template('new_book.html', title='Adding a book',
                            form=form)
+
+
+@app.route('/add_order', methods=['GET', 'POST'])
+@login_required
+def addorder():
+    form = AddOrderForm()
+    if form.validate_on_submit():
+        session = db_session.create_session()
+        global books_id
+        book = session.query(Book).filter(Book.id == books_id).first()
+        # book.title
+        orders = Orders(
+            book_title=book.title,
+            book_id=book.id,
+            time=form.time.data,
+            amount=form.amount.data,
+            sum=int(book.price) * form.amount.data
+        )
+        session.add(orders)
+        session.commit()
+        return redirect('/')
+    return render_template('add_order.html', title='Adding new order', form=form)
+
+
+@app.route('/shopping_cart', methods=['GET', 'POST'])
+@login_required
+def shopping_cart():
+    session = db_session.create_session()
+    orders = session.query(Orders).all()
+    return render_template("shopping_cart.html", orders=orders)
 
 
 @app.route('/map')
@@ -230,3 +251,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
