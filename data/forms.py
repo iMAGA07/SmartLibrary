@@ -30,3 +30,9 @@ class BookForm(FlaskForm):
     year_published = IntegerField("Year published")
     genre = StringField("Genre")
     submit = SubmitField('Sumbit')
+
+
+class AddOrderForm(FlaskForm):
+    time = StringField("Time of delivery")
+    amount = IntegerField("Amount")
+    submit = SubmitField('Sumbit')
