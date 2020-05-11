@@ -33,7 +33,7 @@
     <a href="/" title="The Internet Archive's Open Library: One page for every book">
       <div class="logo-txt">
         <img src="/static/img/logo.png"
-          alt="Open Library logo" height=60 width=220/>
+          alt="Open Library logo" height=64 width=64/>
       </div>
     </a>
   </div>
@@ -72,9 +72,7 @@
     <a  href="/logout">{{ current_user.name }}</a>
 {% else %}
   <ul class="auth-component">
-    <li class="hide-me">
-      <a class="btn"
-         href="/login">Log In</a></li>
+    <li> <a class="btn primary" href="/login">Log In</a></li>
     <li><a class="btn primary" href="/register">Sign Up</a></li>
   </ul>
   {% endif %}
