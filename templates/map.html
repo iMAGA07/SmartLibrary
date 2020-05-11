@@ -1,0 +1,19 @@
+<html lang="en">
+<head>
+{% extends "base.html" %}
+{% block head %}
+    {{ super() }}
+	<title>{{title}}</title>
+	{% endblock %}
+</head>
+
+<body>
+{% block content %}
+{{ super() }}
+<h2>Nearest library</h2>
+
+<p class="pic"><img src="{{url_for('static', filename='img/map.png')}}"></p>
+{% endblock %}
+
+</body>
+</html>

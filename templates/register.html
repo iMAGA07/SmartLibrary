@@ -1,11 +1,49 @@
+<html lang="en">
+<head>
 {% extends "base.html" %}
+{% block head %}
+    {{ super() }}
+	<title>{{title}}</title>
+	{% endblock %}
+</head>
 
+<body>
 {% block content %}
-<h1>Регистрация</h1>
+{{ super() }}
+
+<div id="test-body-mobile">
+<h1>Register form</h1>
 <form action="" method="post">
+
     {{ form.hidden_tag() }}
     {{ form.csrf_token }}
+
+        {{ form.email.label }}<br>
+        {{ form.email(class="form-control", type="email") }}<br>
+        {% for error in form.email.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
     <p>
+        {{ form.password.label }}<br>
+        {{ form.password(class="form-control", type="password") }}<br>
+        {% for error in form.password.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.password_again.label }}<br>
+        {{ form.password_again(class="form-control", type="password") }}<br>
+        {% for error in form.password_again.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+	<p>
         {{ form.surname.label }}<br>
         {{ form.surname(class="form-control") }}<br>
         {% for error in form.surname.errors %}
@@ -23,7 +61,7 @@
             </p>
         {% endfor %}
     </p>
-    <p>
+	<p>
         {{ form.age.label }}<br>
         {{ form.age(class="form-control") }}<br>
         {% for error in form.age.errors %}
@@ -32,7 +70,7 @@
             </p>
         {% endfor %}
     </p>
-    <p>
+	<p>
         {{ form.city_from.label }}<br>
         {{ form.city_from(class="form-control") }}<br>
         {% for error in form.city_from.errors %}
@@ -41,8 +79,7 @@
             </p>
         {% endfor %}
     </p>
-
-    <p>
+	<p>
         {{ form.books_read.label }}<br>
         {{ form.books_read(class="form-control") }}<br>
         {% for error in form.books_read.errors %}
@@ -51,8 +88,7 @@
             </p>
         {% endfor %}
     </p>
-
-    <p>
+	<p>
         {{ form.books_written.label }}<br>
         {{ form.books_written(class="form-control") }}<br>
         {% for error in form.books_written.errors %}
@@ -61,36 +97,11 @@
             </p>
         {% endfor %}
     </p>
-    <p>
-        {{ form.email.label }}<br>
-        {{ form.email(class="form-control", type="email") }}<br>
-        {% for error in form.email.errors %}
-            <p class="alert alert-danger" role="alert">
-                {{ error }}
-            </p>
-        {% endfor %}
-    </p>
-    <p>
-        {{ form.hashed_password.label }}<br>
-        {{ form.hashed_password(class="form-control", type="password") }}<br>
-        {% for error in form.hashed_password.errors %}
-            <p class="alert alert-danger" role="alert">
-                {{ error }}
-            </p>
-        {% endfor %}
-    </p>
-    <p>
-        {{ form.modified_date.label }}<br>
-        {{ form.modified_date(class="form-control", type="time") }}<br>
-        {% for error in form.modified_date.errors %}
-            <p class="alert alert-danger" role="alert">
-                {{ error }}
-            </p>
-        {% endfor %}
-    </p>
-
     <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
-    <p>{{ form.regist(type="submit", class="btn btn-primary") }}</p>
     {{message}}
 </form>
+</div>
 {% endblock %}
+
+</body>
+</html>

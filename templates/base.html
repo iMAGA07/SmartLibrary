@@ -1,23 +1,89 @@
 <!doctype html>
 <html lang="en">
 <head>
+	{% block head %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
           crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/style.css')}}" />
     <title>{{title}}</title>
+	{% endblock %}	
 </head>
 <body>
-<header>
-    <nav class="navbar navbar-light bg-light">
-        <a class="navbar-brand" href="#">SmartLibrary</a>
-    </nav>
+{% block content %}
+
+<div id="topNotice">
+  <div class="page-banner page-banner-black page-banner-center">
+    <div class="iaBar">
+      <div class="iaBarLogo">
+        <a href="/"><img alt="Internet Archive logo" src="/static/img/ia-logo.svg" width="160"></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<header id="header-bar" class="header-bar">
+  <div class="logo-component">
+    <a href="/" title="The Internet Archive's Open Library: One page for every book">
+      <div class="logo-txt">
+        <img src="/static/img/logo.png"
+          alt="Open Library logo" height=60 width=220/>
+      </div>
+    </a>
+  </div>
+
+  <div class="search-component">
+    <div class="search-bar-component">
+      <div class="search-bar">
+        <div class="search-facet">
+          <label class="search-facet-selector">
+            <span aria-hidden="true" class="search-facet-value"></span>
+            <select aria-label="Search by">
+              <option value='all'>All</option>
+              <option value='title'>Title</option>
+              <option value='author'>Author</option>
+              <option value='text'>Text</option>
+              <option value='subject'>Subject</option>
+              <option value='lists'>Lists</option>
+              <option value='advanced'>Advanced</option>
+            </select>
+          </label>
+        </div>
+        <form class="search-bar-input" action="/search" method="get">
+          <input type="text" name="q" placeholder="Search" autocomplete="off">
+          <input name="mode" type="checkbox" aria-hidden="true" checked="checked" value="" id="ftokenstop" class="hidden instantsearch-mode">
+          <input type="submit" value="" class="search-bar-submit" aria-label="Search submit">
+        </form>
+      </div>
+      <div class="search-dropdown">
+        <ul class="search-results">
+        </ul>
+      </div>
+    </div>
+  </div>
+{% if current_user.is_authenticated %}
+
+    <a  href="/logout">{{ current_user.name }}</a>
+{% else %}
+  <ul class="auth-component">
+    <li class="hide-me">
+      <a class="btn"
+         href="/login">Log In</a></li>
+    <li><a class="btn primary" href="/register">Sign Up</a></li>
+  </ul>
+  {% endif %}
 </header>
-<!-- Begin page content -->
-<main role="main" class="container">
-    {% block content %}{% endblock %}
-</main>
+    
+	
+	
+	
+
+{% endblock %}
 </body>
 </html>
