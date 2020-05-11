@@ -1,0 +1,72 @@
+<html lang="en">
+<head>
+    {% extends "base.html" %}
+    {% block head %}
+    {{ super() }}
+    {% endblock %}
+</head>
+
+<body>
+{% block content %}
+<div id="test-body-mobile">
+    <h1>Adding new order</h1>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        {{ form.csrf_token }}
+        <p>
+            {{ form.time.label }}<br>
+            {{ form.time(class="form-control") }}<br>
+            {% for error in form.time.errors %}
+        <p class="alert alert-danger" role="alert">
+            {{ error }}
+        </p>
+        {% endfor %}
+        </p>
+        <p>
+            {{ form.amount.label }}<br>
+            {{ form.amount(class="form-control") }}<br>
+            {% for error in form.amount.errors %}
+        <p class="alert alert-danger" role="alert">
+            {{ error }}
+        </p>
+        {% endfor %}
+        </p>
+
+        <p>
+        <div>
+            {% if current_user.is_authenticated%}
+            <a href="/shopping_cart" class="btn btn-primary">Shopping Cart</a>
+            {% else %}
+            <a href="/login" class="btn btn-primary">Shopping Cart</a>
+            {% endif %}
+        </div>
+        </p>
+
+        <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+        {{message}}
+    </form>
+</div>
+{% endblock %}
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
