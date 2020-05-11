@@ -70,6 +70,8 @@ def register():
                 books_read=form.books_read.data,
                 books_written=form.books_written.data,
                 email=form.email.data,
+                hashed_password=form.hashed_password.data,
+                modified_data=form.modified_data.data,
 
             )
             user.set_password(form.password.data)
