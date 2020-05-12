@@ -19,8 +19,8 @@ class RegisterForm(FlaskForm):
     books_read = StringField('Прочитанные книги')
     books_written = StringField('Написанные книги')
     email = EmailField('Почта', validators=[DataRequired()])
-    hashed_password = PasswordField('Password', validators=[DataRequired()])
-    modified_date = PasswordField('Дата', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    password_again = PasswordField('Repeat password', validators=[DataRequired()])
     submit = SubmitField('Зарегистрироваться')
 
 
