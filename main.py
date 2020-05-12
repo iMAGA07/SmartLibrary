@@ -1,16 +1,24 @@
+import os
+
 import requests
 from flask import Flask, render_template, request, make_response, jsonify
 from flask_login import LoginManager, login_user, current_user, login_required, logout_user
+from flask_restful import Api
+from flask_wtf import FlaskForm
+from requests import get
+from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
-from data.orders import Orders
 from data import db_session, users_api
 from data.book import Book
 from data.db_session import create_session, global_init
 from data.forms import LoginForm, RegisterForm, BookForm, AddOrderForm
+from data.genre import Genre
+from data.orders import Orders
 
 from data.users import User
 
-books_id = 0
+from flask import make_response
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 db_session.global_init("db/library.sqlite")
@@ -59,8 +67,7 @@ def register():
                 city_from=form.city_from.data,
                 books_read=form.books_read.data,
                 books_written=form.books_written.data,
-                email=form.email.data,
-
+                email=form.email.data
             )
             user.set_password(form.password.data)
             session.add(user)
@@ -79,6 +86,10 @@ def load_user(user_id):
 @login_required
 def logout():
     logout_user()
+    try:
+        os.remove("static/img/map.png")
+    except FileNotFoundError:
+        pass
     return redirect("/")
 
 
@@ -89,8 +100,6 @@ def index():
     books_written = []
     message = True
     try:
-        print(current_user.books_read)
-
         if current_user.books_read is not None:
             if len(str(current_user.books_read)) != 0:
                 books_read = [int(item) for item in str(current_user.books_read).split(', ')]
@@ -100,16 +109,13 @@ def index():
     except AttributeError:
         pass
     books = session.query(Book)
-    return render_template('index.html', title="Welcome to Librarianship", books=books, books_read=books_read,
+    return render_template('index.html', title="Welcome to SmartLibrary", books=books, books_read=books_read,
                            books_written=books_written)
 
 
 @app.route('/books/<int:id>', methods=['GET', 'POST'])
 def show_book(id):
     book = session.query(Book).filter(Book.id == id).first()
-    global books_id
-    books_id = id
-
     return render_template('book.html', title='About a book', book=book)
 
 
@@ -140,26 +146,34 @@ def add_book():
                            form=form)
 
 
-@app.route('/add_order', methods=['GET', 'POST'])
+@app.route('/edit_book/<int:id>', methods=['GET', 'POST'])
 @login_required
-def addorder():
-    form = AddOrderForm()
-    if form.validate_on_submit():
-        session = db_session.create_session()
-        global books_id
-        book = session.query(Book).filter(Book.id == books_id).first()
-        # book.title
-        orders = Orders(
-            book_title=book.title,
-            book_id=book.id,
-            time=form.time.data,
-            amount=form.amount.data,
-            sum=int(book.price) * form.amount.data
-        )
-        session.add(orders)
-        session.commit()
-        return redirect('/')
-    return render_template('add_order.html', title='Adding new order', form=form)
+def edit_book(id):
+    form = BookForm()
+
+    session = db_session.create_session()
+    book = session.query(Book).filter(Book.id == id).first()
+    if book.users.id == current_user.id:
+        if request.method == "GET":
+            form.title.data = book.title
+            form.about.data = book.about
+            form.year_published.data = book.year_published
+            form.genre.data = book.genre
+
+        if form.validate_on_submit():
+            book.author = current_user.id
+            book.title = form.title.data
+            book.about = form.about.data
+            book.year_published = form.year_published.data
+            session.add(book)
+            session.commit()
+            f = request.files['file']
+            f.save('static/img/{}.jpg'.format(str(id)))
+            return redirect('/')
+        return render_template('new_book.html', title='Editing a book',
+                               form=form)
+    else:
+        abort(404)
 
 
 @app.route('/shopping_cart', methods=['GET', 'POST'])
@@ -168,6 +182,28 @@ def shopping_cart():
     session = db_session.create_session()
     orders = session.query(Orders).all()
     return render_template("shopping_cart.html", orders=orders)
+
+
+@app.route('/add_order/<int:id>', methods=['GET', 'POST'])
+@login_required
+def addorder(id):
+    form = AddOrderForm()
+    if form.validate_on_submit():
+        session = db_session.create_session()
+
+        book = session.query(Book).filter(Book.id == id).first()
+        # book.title
+        orders = Orders(
+            book_title=book.title,
+            book_id=book.id,
+            time=form.time.data,
+            amount=form.amount.data,
+            sum=100 * form.amount.data
+        )
+        session.add(orders)
+        session.commit()
+        return redirect('/')
+    return render_template('add_order.html', title='Adding new order', form=form)
 
 
 @app.route('/map')
@@ -245,10 +281,28 @@ def map_show():
     return render_template('map.html', title='Map')
 
 
+@app.route('/read_book/<int:id>')
+@login_required
+def read_book(id):
+    session = db_session.create_session()
+    user = session.query(User).filter(User.id == current_user.id).first()
+
+    if len(user.books_read) == 0 or user.books_read is None:
+        user.books_read += str(id)
+    else:
+        user.books_read += ', ' + str(id)
+    session.commit()
+    return redirect('/')
+
+
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Permission denied'}), 404)
+
+
 def main():
     app.run()
 
 
 if __name__ == '__main__':
     main()
-
