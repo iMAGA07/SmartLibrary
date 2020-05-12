@@ -71,27 +71,26 @@
                     </p>
                     <p>Price: {{book.price}}
                     </p>
-
-
-                    <p>
-                    <div>
-                        {% if current_user.is_authenticated%}
-                        <a href="/map" class="btn btn-primary">Find book in your city</a>
-                        {% else %}
-                        <a href="/login" class="btn btn-primary">Find book in your city</a>
-                        {% endif %}
-                    </div>
-                    </p>
-
-                    <p>
-                    <div>
-                        {% if current_user.is_authenticated%}
-                        <a href="/add_order" class="btn btn-primary">Buy</a>
-                        {% else %}
-                        <a href="/login" class="btn btn-primary">Buy</a>
-                        {% endif %}
-                    </div>
-                    </p>
+<p>
+<div>
+{% if current_user.is_authenticated%}
+        <a href="/map" class="btn btn-primary"><font color="white"><font color="white">Find book in your city</font></a>
+		<a href="/read_book/{{book.id}}" class="btn btn-success"><font color="white">Add book to my list</font></a>
+		<a href="/add_order/{{book.id}}" class="btn btn-primary"><font color="white">Buy</font></a>
+{% else %}
+<a href="/login" class="btn btn-primary"><font color="white">Find book in your city</font></a>
+<a href="/login" class="btn btn-success"><font color="white">Add book to my list</font></a>
+<a href="/login" class="btn btn-primary"><font color="white">Buy</font></a>
+{% endif %}
+ </div>
+</p>                
+                    
+                    
+					
+					
+					
+					
+					
                 </div>
             </div>
         </div>
