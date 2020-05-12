@@ -1,10 +1,10 @@
 <html lang="en">
 <head>
-{% extends "base.html" %}
-{% block head %}
+    {% extends "base.html" %}
+    {% block head %}
     {{ super() }}
-	<title>{{title}}</title>
-	{% endblock %}
+    <title>{{title}}</title>
+    {% endblock %}
 </head>
 
 <body>
@@ -13,78 +13,89 @@
 <div id="test-body-mobile">
 
 
+    <div class="contentContainer" itemscope itemtype="https://schema.org/Book">
+        <div id="contentHead">
 
-<div class="contentContainer" itemscope itemtype="https://schema.org/Book">
-    <div id="contentHead">
 
-        
-<div id="editTools" class="edit">
-    <div id="editButton">
-      <!-- FIXME: accesskey / keyboard shortcut needs i18n -->
-      <a class="linkButton larger" href="/edit_book/{{book.id}}" title="Edit this template"
-         data-ol-link-track="CTAClick|Edit" accesskey="e">Edit</a>	
-    </div>
-    <div id="editInfo">
-        <div class="brown smaller sansserif">Last edited by <a rel="nofollow" href="/" >Admin</a></div>
-        <div class="smallest gray sansserif">March 24, 2020</div>
-    </div>
-</div>
-<h1>
-            <span itemprop="name">{{book.title}}</span>
-        </h1>
-		<div class="clearfix"></div>
-        <div class="work"><span class="editions">By <a href="/user/{{book.users.id}}" itemprop="author">{{book.users.surname}} {{book.users.name}}</a></span></div>
-        <div class="shift">
-            <a href="#editions">Go to the editions section to read or download ebooks.</a>
+            <div id="editTools" class="edit">
+                <div id="editButton">
+                    <!-- FIXME: accesskey / keyboard shortcut needs i18n -->
+                    <a class="linkButton larger" href="/edit_book/{{book.id}}" title="Edit this template"
+                       data-ol-link-track="CTAClick|Edit" accesskey="e">Edit</a>
+                </div>
+                <div id="editInfo">
+                    <div class="brown smaller sansserif">Last edited by <a rel="nofollow" href="/">Admin</a></div>
+                    <div class="smallest gray sansserif">March 24, 2020</div>
+                </div>
+            </div>
+            <h1>
+                <span itemprop="name">{{book.title}}</span>
+            </h1>
+            <div class="clearfix"></div>
+            <div class="work"><span class="editions">By <a href="/user/{{book.users.id}}" itemprop="author">{{book.users.surname}} {{book.users.name}}</a></span>
+            </div>
+            <div class="shift">
+                <a href="#editions">Go to the editions section to read or download ebooks.</a>
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <div id="contentBody">
+
+            <div class="workCover">
+                <div class="illustration" id="work">
+                    <div class="coverMagic">
+
+                        <img src="/static/img/{{book.id}}.jpg" class="cover" width="260" height="400" class="center-img"
+                             align="middle"/>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="workAbout">
+                <div class="workPadding">
+
+
+                    <p>Title: {{book.title}}
+                    </p>
+                    <p>Author: {{book.users.surname}} {{book.users.name}}
+                    </p>
+                    <p>Published: {{book.year_published}}
+                    </p>
+                    <p>About: {{book.about}}
+                    </p>
+                    <p>Genre: {{book.genres.name}}
+                    </p>
+                    <p>Price: {{book.price}}
+                    </p>
+
+
+                    <p>
+                    <div>
+                        {% if current_user.is_authenticated%}
+                        <a href="/map" class="btn btn-primary">Find book in your city</a>
+                        {% else %}
+                        <a href="/login" class="btn btn-primary">Find book in your city</a>
+                        {% endif %}
+                    </div>
+                    </p>
+
+                    <p>
+                    <div>
+                        {% if current_user.is_authenticated%}
+                        <a href="/add_order" class="btn btn-primary">Buy</a>
+                        {% else %}
+                        <a href="/login" class="btn btn-primary">Buy</a>
+                        {% endif %}
+                    </div>
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
-
-    <div class="clearfix"></div>
-
-<div id="contentBody">
-
-        <div class="workCover">
-            <div class="illustration" id="work">
-			<div class="coverMagic">
-        
-            <img src="/static/img/{{book.id}}.jpg" class="cover"  width="260" height="400" class="center-img" align="middle"/>
-        
-        
-			</div>
-			</div>
-		</div>
-
-<div class="workAbout">
-        <div class="workPadding">
-            
-            
-<p>Title: {{book.title}}
-</p>
-<p>Author: {{book.users.surname}} {{book.users.name}}
-</p>
-<p>Published: {{book.year_published}}
-</p>
-<p>About: {{book.about}}
-</p>
-<p>Genre: {{book.genres.name}}
-</p>
-
-<div>
-{% if current_user.is_authenticated%}
-        <a href="/map" class="btn btn-primary">Find book in your city</a>
-{% else %}
-<a href="/login" class="btn btn-primary">Find book in your city</a>
-{% endif %}
- </div>
-
-</div>
-</div>
-</div>
-</div>
-
-
-
-
 
 
 </div>
